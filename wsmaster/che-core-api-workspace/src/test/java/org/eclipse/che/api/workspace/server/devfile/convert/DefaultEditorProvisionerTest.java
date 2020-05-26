@@ -65,7 +65,8 @@ public class DefaultEditorProvisionerTest {
   @Test
   public void shouldNotProvisionDefaultEditorIfItIsNotConfigured() throws Exception {
     // given
-    provisioner = new DefaultEditorProvisioner(null, new String[] {}, fqnParser, pluginFQNParser);
+    provisioner =
+        new DefaultEditorProvisioner(null, new String[] {}, "", fqnParser, pluginFQNParser);
     DevfileImpl devfile = new DevfileImpl();
 
     // when
@@ -82,6 +83,7 @@ public class DefaultEditorProvisionerTest {
         new DefaultEditorProvisioner(
             EDITOR_REF,
             new String[] {TERMINAL_PLUGIN_REF, COMMAND_PLUGIN_REF},
+            "",
             fqnParser,
             pluginFQNParser);
     DevfileImpl devfile = new DevfileImpl();
@@ -103,7 +105,7 @@ public class DefaultEditorProvisionerTest {
     // given
     provisioner =
         new DefaultEditorProvisioner(
-            EDITOR_REF, new String[] {TERMINAL_PLUGIN_REF}, fqnParser, pluginFQNParser);
+            EDITOR_REF, new String[] {TERMINAL_PLUGIN_REF}, "", fqnParser, pluginFQNParser);
 
     DevfileImpl devfile = new DevfileImpl();
     ComponentImpl defaultEditorWithDifferentVersion =
@@ -129,7 +131,7 @@ public class DefaultEditorProvisionerTest {
     // given
     provisioner =
         new DefaultEditorProvisioner(
-            EDITOR_REF, new String[] {TERMINAL_PLUGIN_REF}, fqnParser, pluginFQNParser);
+            EDITOR_REF, new String[] {TERMINAL_PLUGIN_REF}, "", fqnParser, pluginFQNParser);
 
     DevfileImpl devfile = new DevfileImpl();
     ComponentImpl defaultEditorWithDifferentVersion =
@@ -156,7 +158,7 @@ public class DefaultEditorProvisionerTest {
     // given
     provisioner =
         new DefaultEditorProvisioner(
-            EDITOR_REF, new String[] {TERMINAL_PLUGIN_REF}, fqnParser, pluginFQNParser);
+            EDITOR_REF, new String[] {TERMINAL_PLUGIN_REF}, "", fqnParser, pluginFQNParser);
 
     DevfileImpl devfile = new DevfileImpl();
     ComponentImpl editorWithNameSimilarToDefault =
@@ -180,7 +182,7 @@ public class DefaultEditorProvisionerTest {
     // given
     provisioner =
         new DefaultEditorProvisioner(
-            EDITOR_REF, new String[] {TERMINAL_PLUGIN_REF}, fqnParser, pluginFQNParser);
+            EDITOR_REF, new String[] {TERMINAL_PLUGIN_REF}, "", fqnParser, pluginFQNParser);
 
     DevfileImpl devfile = new DevfileImpl();
     devfile.getAttributes().put(EDITOR_FREE_DEVFILE_ATTRIBUTE, "true");
@@ -200,7 +202,7 @@ public class DefaultEditorProvisionerTest {
     // given
     provisioner =
         new DefaultEditorProvisioner(
-            EDITOR_REF, new String[] {TERMINAL_PLUGIN_REF}, fqnParser, pluginFQNParser);
+            EDITOR_REF, new String[] {TERMINAL_PLUGIN_REF}, "", fqnParser, pluginFQNParser);
 
     DevfileImpl devfile = new DevfileImpl();
     ComponentImpl pluginWithNameSimilarToDefault =
@@ -224,7 +226,7 @@ public class DefaultEditorProvisionerTest {
       throws Exception {
     // given
     provisioner =
-        new DefaultEditorProvisioner(EDITOR_REF, new String[] {}, fqnParser, pluginFQNParser);
+        new DefaultEditorProvisioner(EDITOR_REF, new String[] {}, "", fqnParser, pluginFQNParser);
     DevfileImpl devfile = new DevfileImpl();
     ComponentImpl nonDefaultEditor =
         new ComponentImpl(EDITOR_COMPONENT_TYPE, "anypublisher/anyname/v" + EDITOR_VERSION);
@@ -244,7 +246,7 @@ public class DefaultEditorProvisionerTest {
       throws Exception {
     // given
     provisioner =
-        new DefaultEditorProvisioner(EDITOR_REF, new String[] {}, fqnParser, pluginFQNParser);
+        new DefaultEditorProvisioner(EDITOR_REF, new String[] {}, "", fqnParser, pluginFQNParser);
     DevfileImpl devfile = new DevfileImpl();
     ComponentImpl myTheiaEditor =
         new ComponentImpl(
@@ -265,7 +267,7 @@ public class DefaultEditorProvisionerTest {
       throws Exception {
     // given
     provisioner =
-        new DefaultEditorProvisioner(EDITOR_REF, new String[] {}, fqnParser, pluginFQNParser);
+        new DefaultEditorProvisioner(EDITOR_REF, new String[] {}, "", fqnParser, pluginFQNParser);
     DevfileImpl devfile = new DevfileImpl();
     ComponentImpl myTheiaEditor =
         new ComponentImpl(
@@ -300,7 +302,7 @@ public class DefaultEditorProvisionerTest {
     // given
     provisioner =
         new DefaultEditorProvisioner(
-            EDITOR_REF, new String[] {TERMINAL_PLUGIN_REF}, fqnParser, pluginFQNParser);
+            EDITOR_REF, new String[] {TERMINAL_PLUGIN_REF}, "", fqnParser, pluginFQNParser);
     DevfileImpl devfile = new DevfileImpl();
     ComponentImpl myTerminal =
         new ComponentImpl(
@@ -323,7 +325,7 @@ public class DefaultEditorProvisionerTest {
     // given
     provisioner =
         new DefaultEditorProvisioner(
-            EDITOR_REF, new String[] {TERMINAL_PLUGIN_REF}, fqnParser, pluginFQNParser);
+            EDITOR_REF, new String[] {TERMINAL_PLUGIN_REF}, "", fqnParser, pluginFQNParser);
     DevfileImpl devfile = new DevfileImpl();
     String meta =
         "apiVersion: v2\n"
@@ -360,6 +362,7 @@ public class DefaultEditorProvisionerTest {
         new DefaultEditorProvisioner(
             EDITOR_REF,
             new String[] {EDITOR_PUBLISHER + "/" + "my-plugin/v2.0"},
+            "",
             fqnParser,
             pluginFQNParser);
     DevfileImpl devfile = new DevfileImpl();
@@ -389,6 +392,7 @@ public class DefaultEditorProvisionerTest {
         new DefaultEditorProvisioner(
             EDITOR_REF,
             new String[] {EDITOR_PUBLISHER + "/" + "my-plugin/v2.0", referencePluginRef},
+            "",
             fqnParser,
             pluginFQNParser);
     String meta =
