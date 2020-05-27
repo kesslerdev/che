@@ -53,7 +53,6 @@ import org.eclipse.che.workspace.infrastructure.openshift.server.OpenShiftServer
 public class OpenShiftInternalRuntime extends KubernetesInternalRuntime<OpenShiftEnvironment> {
 
   private final OpenShiftProject project;
-  // private final AsyncStorageProvisioner asyncStorageProvisioner;
 
   @Inject
   public OpenShiftInternalRuntime(
@@ -109,7 +108,6 @@ public class OpenShiftInternalRuntime extends KubernetesInternalRuntime<OpenShif
   protected void startMachines() throws InfrastructureException {
     OpenShiftEnvironment osEnv = getContext().getEnvironment();
     String workspaceId = getContext().getIdentity().getWorkspaceId();
-    // asyncStorageProvisioner.provision(osEnv, getContext().getIdentity());
     createSecrets(osEnv, workspaceId);
     createConfigMaps(osEnv, workspaceId);
     List<Service> createdServices = createServices(osEnv, workspaceId);
