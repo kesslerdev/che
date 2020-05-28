@@ -69,10 +69,12 @@ import org.slf4j.LoggerFactory;
 /**
  * Configure environment for Async Storage feature (details described in issue
  * https://github.com/eclipse/che/issues/15384) This environment will allow backup on workspace stop
- * event and restore on restart created earlier. Will apply only in case workspace has attributes: -
- * asyncPersist : true - persistVolumes : false During provision will be created: - storage Pod -
- * service for rsync connection via SSH - configmap, with public part of SSH key - PVC for storing
- * backups
+ * event and restore on restart created earlier. <br>
+ * Will apply only in case workspace has attributes: asyncPersist: true - persistVolumes:
+ * false.</br> In case workspace has attributes: asyncPersist: true - persistVolumes: true will
+ * throw exception.</br> Feature enabled only for 'common' PVC strategy, in other cases will throw
+ * exception.</br> During provision will be created: - storage Pod - service for rsync connection
+ * via SSH - configmap, with public part of SSH key - PVC for storing backups;
  */
 public class AsyncStorageProvisioner {
 
@@ -92,6 +94,7 @@ public class AsyncStorageProvisioner {
   private final String pvcQuantity;
   private final String storageImage;
   private final String accessMode;
+  private final String strategy;
   private final SshManager sshManager;
   private final OpenShiftClientFactory clientFactory;
 
@@ -100,20 +103,41 @@ public class AsyncStorageProvisioner {
       @Named("che.infra.kubernetes.pvc.quantity") String pvcQuantity,
       @Named("che.infra.kubernetes.async.storage.image") String image,
       @Named("che.infra.kubernetes.pvc.access_mode") String accessMode,
+      @Named("che.infra.kubernetes.pvc.strategy") String strategy,
       SshManager sshManager,
       OpenShiftClientFactory openShiftClientFactory) {
     this.pvcQuantity = pvcQuantity;
     this.storageImage = image;
     this.accessMode = accessMode;
+    this.strategy = strategy;
     this.sshManager = sshManager;
     this.clientFactory = openShiftClientFactory;
   }
 
   public void provision(OpenShiftEnvironment osEnv, RuntimeIdentity identity)
       throws InfrastructureException {
-    if (!(isEphemeral(osEnv.getAttributes())
-        && "true".equals(osEnv.getAttributes().get(ASYNC_PERSIST_ATTRIBUTE)))) {
+    if (!"true".equals(osEnv.getAttributes().get(ASYNC_PERSIST_ATTRIBUTE))) {
       return;
+    }
+
+    if ("true".equals(osEnv.getAttributes().get(ASYNC_PERSIST_ATTRIBUTE))
+        && !"common".equals(strategy)) {
+      String message =
+          format(
+              "Workspace configuration not valid: Asynchronous storage available only for 'common' PVC strategy, but got %s",
+              strategy);
+      LOG.warn(message);
+      osEnv.addWarning(new WarningImpl(4200, message));
+      throw new InfrastructureException(message);
+    }
+
+    if ("true".equals(osEnv.getAttributes().get(ASYNC_PERSIST_ATTRIBUTE))
+        && !isEphemeral(osEnv.getAttributes())) {
+      String message =
+          "Workspace configuration not valid: Asynchronous storage available only if attribute 'persistVolumes' set to false";
+      LOG.warn(message);
+      osEnv.addWarning(new WarningImpl(4200, message));
+      throw new InfrastructureException(message);
     }
 
     String namespace = identity.getInfrastructureNamespace();
@@ -202,7 +226,7 @@ public class AsyncStorageProvisioner {
       } catch (ServerException | ConflictException e) {
         String message =
             format(
-                "Unable to generate the SSH key for async storage service. Cause: {}",
+                "Unable to generate the SSH key for async storage service. Cause: %S",
                 e.getMessage());
         LOG.warn(message);
         osEnv.addWarning(

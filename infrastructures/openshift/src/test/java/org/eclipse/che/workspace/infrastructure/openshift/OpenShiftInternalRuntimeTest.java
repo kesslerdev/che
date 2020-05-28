@@ -82,7 +82,6 @@ import org.eclipse.che.workspace.infrastructure.kubernetes.wsplugins.SidecarTool
 import org.eclipse.che.workspace.infrastructure.openshift.environment.OpenShiftEnvironment;
 import org.eclipse.che.workspace.infrastructure.openshift.project.OpenShiftProject;
 import org.eclipse.che.workspace.infrastructure.openshift.project.OpenShiftRoutes;
-import org.eclipse.che.workspace.infrastructure.openshift.provision.AsyncStorageProvisioner;
 import org.eclipse.che.workspace.infrastructure.openshift.provision.OpenShiftPreviewUrlCommandProvisioner;
 import org.mockito.Answers;
 import org.mockito.ArgumentCaptor;
@@ -142,7 +141,6 @@ public class OpenShiftInternalRuntimeTest {
   @Mock private UnrecoverablePodEventListenerFactory unrecoverablePodEventListenerFactory;
   @Mock private RuntimeHangingDetector runtimeHangingDetector;
   @Mock private OpenShiftPreviewUrlCommandProvisioner previewUrlCommandProvisioner;
-  @Mock private AsyncStorageProvisioner asyncStorageProvisioner;
 
   @Mock(answer = Answers.RETURNS_MOCKS)
   private Tracer tracer;
@@ -180,7 +178,6 @@ public class OpenShiftInternalRuntimeTest {
             toolingProvisioner,
             runtimeHangingDetector,
             previewUrlCommandProvisioner,
-            // asyncStorageProvisioner,
             tracer,
             context,
             project);

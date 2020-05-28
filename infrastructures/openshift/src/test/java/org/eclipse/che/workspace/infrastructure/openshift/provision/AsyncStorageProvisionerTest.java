@@ -15,6 +15,7 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonList;
 import static java.util.Collections.singletonMap;
+import static java.util.UUID.randomUUID;
 import static org.eclipse.che.api.workspace.shared.Constants.ASYNC_PERSIST_ATTRIBUTE;
 import static org.eclipse.che.api.workspace.shared.Constants.PERSIST_VOLUMES_ATTRIBUTE;
 import static org.eclipse.che.workspace.infrastructure.openshift.provision.AsyncStorageProvisioner.ASYNC_STORAGE;
@@ -86,15 +87,44 @@ public class AsyncStorageProvisionerTest {
   public void setUp() {
     asyncStorageProvisioner =
         new AsyncStorageProvisioner(
-            "10Gi", "org/image:tag", "ReadWriteOnce", sshManager, clientFactory);
+            "10Gi", "org/image:tag", "ReadWriteOnce", "common", sshManager, clientFactory);
     attributes = new HashMap<>(2);
     attributes.put(ASYNC_PERSIST_ATTRIBUTE, "true");
     attributes.put(PERSIST_VOLUMES_ATTRIBUTE, "false");
     sshPair = new SshPairImpl("user", "internal", SSH_KEY_NAME, "", "");
   }
 
+  @Test(expectedExceptions = InfrastructureException.class)
+  public void shouldThrowExceptionIfNotCommonStrategy() throws Exception {
+    AsyncStorageProvisioner asyncStorageProvisioner =
+        new AsyncStorageProvisioner(
+            "10Gi",
+            "org/image:tag",
+            "ReadWriteOnce",
+            randomUUID().toString(),
+            sshManager,
+            clientFactory);
+    when(openShiftEnvironment.getAttributes()).thenReturn(attributes);
+    asyncStorageProvisioner.provision(openShiftEnvironment, identity);
+    verifyNoMoreInteractions(sshManager);
+    verifyNoMoreInteractions(clientFactory);
+    verifyNoMoreInteractions(identity);
+  }
+
+  @Test(expectedExceptions = InfrastructureException.class)
+  public void shouldThrowExceptionIfAsyncStorageForNotEphemeralWorkspace() throws Exception {
+    Map attributes = new HashMap<>(2);
+    attributes.put(ASYNC_PERSIST_ATTRIBUTE, "true");
+    attributes.put(PERSIST_VOLUMES_ATTRIBUTE, "true");
+    when(openShiftEnvironment.getAttributes()).thenReturn(attributes);
+    asyncStorageProvisioner.provision(openShiftEnvironment, identity);
+    verifyNoMoreInteractions(sshManager);
+    verifyNoMoreInteractions(clientFactory);
+    verifyNoMoreInteractions(identity);
+  }
+
   @Test
-  public void shouldDoNothingIfNotSetAttributes() throws InfrastructureException {
+  public void shouldDoNothingIfNotSetAttribute() throws InfrastructureException {
     when(openShiftEnvironment.getAttributes()).thenReturn(emptyMap());
     asyncStorageProvisioner.provision(openShiftEnvironment, identity);
     verifyNoMoreInteractions(sshManager);
@@ -103,17 +133,7 @@ public class AsyncStorageProvisionerTest {
   }
 
   @Test
-  public void shouldDoNothingIfNotSetAttributePersistVolume() throws InfrastructureException {
-    when(openShiftEnvironment.getAttributes())
-        .thenReturn(singletonMap(ASYNC_PERSIST_ATTRIBUTE, "true"));
-    asyncStorageProvisioner.provision(openShiftEnvironment, identity);
-    verifyNoMoreInteractions(sshManager);
-    verifyNoMoreInteractions(clientFactory);
-    verifyNoMoreInteractions(identity);
-  }
-
-  @Test
-  public void shouldDoNothingIfNotSetAttributesAsyncPersist() throws InfrastructureException {
+  public void shouldDoNothingIfAttributesAsyncPersistOnly() throws InfrastructureException {
     when(openShiftEnvironment.getAttributes())
         .thenReturn(singletonMap(PERSIST_VOLUMES_ATTRIBUTE, "false"));
     asyncStorageProvisioner.provision(openShiftEnvironment, identity);
