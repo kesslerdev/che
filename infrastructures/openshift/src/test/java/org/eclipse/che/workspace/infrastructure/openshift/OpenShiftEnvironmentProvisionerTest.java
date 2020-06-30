@@ -20,6 +20,7 @@ import org.eclipse.che.workspace.infrastructure.kubernetes.provision.Certificate
 import org.eclipse.che.workspace.infrastructure.kubernetes.provision.GitConfigProvisioner;
 import org.eclipse.che.workspace.infrastructure.kubernetes.provision.ImagePullSecretProvisioner;
 import org.eclipse.che.workspace.infrastructure.kubernetes.provision.LogsVolumeMachineProvisioner;
+import org.eclipse.che.workspace.infrastructure.kubernetes.provision.PodTerminationGracePeriodProvisioner;
 import org.eclipse.che.workspace.infrastructure.kubernetes.provision.ProxySettingsProvisioner;
 import org.eclipse.che.workspace.infrastructure.kubernetes.provision.ServiceAccountProvisioner;
 import org.eclipse.che.workspace.infrastructure.kubernetes.provision.SshKeysProvisioner;
@@ -59,7 +60,7 @@ public class OpenShiftEnvironmentProvisionerTest {
   @Mock private RestartPolicyRewriter restartPolicyRewriter;
   @Mock private ContainerResourceProvisioner ramLimitProvisioner;
   @Mock private LogsVolumeMachineProvisioner logsVolumeMachineProvisioner;
-  @Mock private OpenShiftPodTerminationGracePeriodProvisioner podTerminationGracePeriodProvisioner;
+  @Mock private PodTerminationGracePeriodProvisioner podTerminationGracePeriodProvisioner;
   @Mock private ImagePullSecretProvisioner imagePullSecretProvisioner;
   @Mock private ProxySettingsProvisioner proxySettingsProvisioner;
   @Mock private ServiceAccountProvisioner serviceAccountProvisioner;

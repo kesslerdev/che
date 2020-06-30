@@ -339,7 +339,7 @@ public class AsyncStorageProvisioner {
 
     ServicePort port =
         new ServicePortBuilder()
-            .withName("2222")
+            .withName("RSYNC_PORT")
             .withProtocol("TCP")
             .withPort(SERVICE_PORT)
             .withTargetPort(targetPort)

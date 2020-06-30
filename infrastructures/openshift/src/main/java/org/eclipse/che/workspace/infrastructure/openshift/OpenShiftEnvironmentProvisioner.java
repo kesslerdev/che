@@ -37,7 +37,6 @@ import org.eclipse.che.workspace.infrastructure.kubernetes.provision.server.Serv
 import org.eclipse.che.workspace.infrastructure.kubernetes.server.PreviewUrlExposer;
 import org.eclipse.che.workspace.infrastructure.openshift.environment.OpenShiftEnvironment;
 import org.eclipse.che.workspace.infrastructure.openshift.provision.AsyncStorageProvisioner;
-import org.eclipse.che.workspace.infrastructure.openshift.provision.OpenShiftPodTerminationGracePeriodProvisioner;
 import org.eclipse.che.workspace.infrastructure.openshift.provision.OpenShiftUniqueNamesProvisioner;
 import org.eclipse.che.workspace.infrastructure.openshift.provision.RouteTlsProvisioner;
 import org.eclipse.che.workspace.infrastructure.openshift.server.OpenShiftPreviewUrlExposer;
@@ -88,7 +87,7 @@ public class OpenShiftEnvironmentProvisioner
       WorkspaceVolumesStrategy volumesStrategy,
       ContainerResourceProvisioner resourceLimitRequestProvisioner,
       LogsVolumeMachineProvisioner logsVolumeMachineProvisioner,
-      OpenShiftPodTerminationGracePeriodProvisioner podTerminationGracePeriodProvisioner,
+      PodTerminationGracePeriodProvisioner podTerminationGracePeriodProvisioner,
       ImagePullSecretProvisioner imagePullSecretProvisioner,
       ProxySettingsProvisioner proxySettingsProvisioner,
       AsyncStorageProvisioner asyncStorageProvisioner,
